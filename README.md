@@ -1,95 +1,72 @@
-# Tumor-classification
-
-## Dataset = keggle
-
-## Step followed: 
-
-### 1. Data import
-### 2. EDA(Exploratory Data Analysis)
-### 3. Data Augmentation
-### 4. Data Preprocessing
-### 5. Image Loading
-### 6. Plotting the images
-### 7. Making directories to store data
-### 8. Train Test and validation split
-### 9. Model 1: using vgg19 (freezing all the previous parameters)
-  ###  Model 2: unfreezing last two layer and using previous model parameters
-  ###  Model 3: Unfreezing the entire network and using model 2 weights
-            ### Got highest accuracy 
-10/10 [==============================] - 4s 399ms/step - loss: 0.3825 - Valid accuracy: 0.8355
-10/10 [==============================] - 4s 408ms/step - loss: 0.3696 - Test accuracy: 0.84
-  ###  Test : Real MRI image of my father that i captured almost 3 years ago
-  ###  Model 4: Model with Adam optimizer and Unfreezing the entire network
-### 10. Hyper parameter tuning
-
-
-
 # Brain Tumor Classification Using Deep Learning
 
-This project implements a deep learning-based approach for classifying brain MRI images into two categories: **Tumor** and **No Tumor**. The project explores multiple transfer learning models including VGG19, ResNet50, and EfficientNetB0. It also includes hyperparameter tuning, data augmentation, and a real-world test case using an actual MRI scan.
+This project uses convolutional neural networks and transfer learning to classify MRI brain scans into two categories: **Tumor** and **No Tumor**. It includes full data preparation, training using multiple deep learning models, and even real-world testing using a personal MRI scan.
 
 ---
 
-## 🔍 Project Overview
+## 🧠 Project Workflow
 
-- **Objective**: Accurately classify MRI images as containing a brain tumor or not.
-- **Techniques Used**:
-  - Transfer Learning (VGG19, ResNet50, EfficientNetB0)
-  - Data Preprocessing and Augmentation
-  - Hyperparameter Tuning (Keras Tuner)
-  - Custom directory setup and renaming scripts
-  - Inference on real-life MRI scan
+1. **Data Import**  
+   Dataset of MRI images categorized into `yes/` (tumor) and `no/` (normal) folders.
 
----
+2. **Exploratory Data Analysis (EDA)**  
+   Class distribution, image samples, and imbalance analysis.
 
-## 📁 Dataset
+3. **Data Augmentation**  
+   Applied transformations to increase dataset variability and balance classes.
 
-The dataset is divided into two folders:
+4. **Data Preprocessing & Directory Setup**  
+   Created train/val/test folders, renamed files, and loaded images using Keras generators.
 
-- `yes/` - MRI scans with tumors
-- `no/` - MRI scans without tumors
+5. **Train-Validation-Test Split**  
+   80% training, 10% validation, 10% testing.
 
-Each image was renamed for consistency. The data was later split into **80% training**, **10% validation**, and **10% testing**.
+6. **Model Building (Transfer Learning)**
 
----
+   ### ✅ Model 1: VGG19 (Frozen Layers)  
+   Basic transfer learning — all convolutional layers frozen.
 
-## 🧠 Models Trained
+   ### ✅ Model 2: VGG19 (Last 2 Layers Unfrozen)  
+   Slight fine-tuning on upper layers for better accuracy.
 
-### Model 1
-- VGG19 with all layers frozen
-- Baseline transfer learning performance
-
-### Model 2
-- VGG19 with last two convolutional blocks unfrozen
-- Improved generalization
-
-### Model 3
-- VGG19 fully unfrozen
-- Fine-tuned on Model 2 weights
-
-### Model 4
-- VGG19 + Adam optimizer with full unfreezing
-- Underperformed compared to others
-
-### Model 5
-- ResNet50 with Keras Tuner for hyperparameter tuning
-- Best performing model
-
-### Model 6
-- EfficientNetB0 with Keras Tuner
-- Slightly lower performance than ResNet50
-
----
-
-## 📊 Results
-# Model 3: Unfreezing the entire network and using model 2 weights
+   ### ✅ Model 3: VGG19 (Fully Unfrozen)  
+   Best performing model — fine-tuned using Model 2 weights.  
+   **✔ Test Accuracy: 84%**  
             ### Got highest accuracy 
 10/10 [==============================] - 4s 399ms/step - loss: 0.3825 - Valid accuracy: 0.8355
 10/10 [==============================] - 4s 408ms/step - loss: 0.3696 - Test accuracy: 0.84
 
 > Note: Results may vary depending on split and tuning.
 
+
+- **Validation Accuracy**: ~83.6%
+- **Training Loss** decreased steadily, indicating good convergence.
+
+### ✅ Model 4: VGG19 + Adam Optimizer (Fully Unfrozen)  
+Tried alternative optimizer — performance dropped compared to Model 3.
+
+7. **Real-World Testing**  
+Used a personal MRI scan (3 years old) of the author's father — tested successfully using the trained model.
+
+8. **Hyperparameter Tuning**  
+- Explored with Keras Tuner (Hyperband)
+- Attempted ResNet50 and EfficientNetB0 architectures
+- Found promising results but not outperforming Model 3 within current experiment scope
+
 ---
+
+## 📊 Results
+
+| Model                              | Test Accuracy         |
+|------------------------------------|-----------------------|
+| VGG19 (frozen)                     | 64% (10 epoch)        |
+| VGG19 (partial unfreeze)           | 66% (10 epoch)        |
+| **VGG19 (fully unfrozen)**         | **84% (10 epoch)** ✅ |
+| VGG19 + Adam                       | Lower accuracy        |
+| ResNet50- with 4 added dense layer | lower accuracy        |
+
+---
+
 
 ## 🔧 Technologies Used
 
@@ -120,6 +97,7 @@ x = np.expand_dims(x, axis=0)
 prediction = model.predict(x)
 print("Prediction:", "Tumor" if prediction[0][0] > 0.5 else "No Tumor")
 ```
+# predicted correctly with 100% confidence level
 
 ## 📌 Future Work
 
